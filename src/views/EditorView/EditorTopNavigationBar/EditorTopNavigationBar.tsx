@@ -1,6 +1,6 @@
 import { ContextType } from '../../../data/enums/ContextType';
 import './EditorTopNavigationBar.scss';
-import React from 'react';
+import React, { useEffect } from 'react';
 import classNames from 'classnames';
 import { AppState } from '../../../store';
 import { connect } from 'react-redux';
@@ -102,6 +102,24 @@ const EditorTopNavigationBar: React.FC<IProps> = (
         updateCrossHairVisibleStatusAction(!crossHairVisible);
     };
 
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key.toLowerCase() === 'x') {
+                ViewPortActions.zoomIn();
+            }
+
+            if (event.key.toLowerCase() === 'z') {
+                ViewPortActions.zoomOut();
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
+
     const withAI = (
         (activeLabelType === LabelType.RECT && AISelector.isAISSDObjectDetectorModelLoaded()) ||
         (activeLabelType === LabelType.RECT && AISelector.isAIYOLOObjectDetectorModelLoaded()) ||
@@ -115,7 +133,7 @@ const EditorTopNavigationBar: React.FC<IProps> = (
                 {
                     getButtonWithTooltip(
                         'zoom-in',
-                        'zoom in',
+                        'zoom in (x)',
                         'ico/zoom-in.png',
                         'zoom-in',
                         false,
@@ -126,7 +144,7 @@ const EditorTopNavigationBar: React.FC<IProps> = (
                 {
                     getButtonWithTooltip(
                         'zoom-out',
-                        'zoom out',
+                        'zoom out (z)',
                         'ico/zoom-out.png',
                         'zoom-out',
                         false,
