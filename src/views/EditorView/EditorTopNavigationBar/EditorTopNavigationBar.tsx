@@ -89,11 +89,12 @@ const EditorTopNavigationBar: React.FC<IProps> = (
         );
     };
 
+    const isZoomed = () => {
+        return GeneralSelector.getZoom() !== ViewPointSettings.MIN_ZOOM;
+    };
+
     const imageDragOnClick = () => {
-        if (imageDragMode) {
-            updateImageDragModeStatusAction(!imageDragMode);
-        }
-        else if (GeneralSelector.getZoom() !== ViewPointSettings.MIN_ZOOM) {
+        if (imageDragMode || isZoomed()) {
             updateImageDragModeStatusAction(!imageDragMode);
         }
     };
@@ -110,6 +111,13 @@ const EditorTopNavigationBar: React.FC<IProps> = (
 
             if (event.key.toLowerCase() === 'z') {
                 ViewPortActions.zoomOut();
+            }
+
+            if (event.key.toLowerCase() === 'c') {
+                if (isZoomed() || !imageDragMode) {
+                    imageDragMode = !imageDragMode;
+                }
+                imageDragOnClick();
             }
         };
 
@@ -179,7 +187,7 @@ const EditorTopNavigationBar: React.FC<IProps> = (
                 {
                     getButtonWithTooltip(
                         'image-drag-mode',
-                        imageDragMode ? 'turn-off image drag mode' : 'turn-on image drag mode - works only when image is zoomed',
+                        imageDragMode ? 'turn-off image drag mode (c)' : 'turn-on image drag mode (c) - works only when image is zoomed',
                         'ico/hand.png',
                         'image-drag-mode',
                         imageDragMode,
