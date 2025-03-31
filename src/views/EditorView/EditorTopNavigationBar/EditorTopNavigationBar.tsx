@@ -94,7 +94,7 @@ const EditorTopNavigationBar: React.FC<IProps> = (
     };
 
     const imageDragOnClick = () => {
-        if (imageDragMode || isZoomed()) {
+        if (isZoomed() || imageDragMode) {
             updateImageDragModeStatusAction(!imageDragMode);
         }
     };
